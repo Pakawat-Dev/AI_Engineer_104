@@ -2,179 +2,95 @@
 
 Python application that uses AI agents to help manage meetings, create agendas, and handle task assignments.
 
-## What This Does
-
-This program creates AI-powered assistants that can:
-- Schedule meetings and suggest time slots
-- Create meeting agendas
-- Summarize meeting notes
-- Handle custom task assignments
+## Overview
+This project uses AI agents to help manage meetings, create agendas, and handle assignments using OpenAI's GPT models.
 
 ## Prerequisites
-
-Before you start, you need:
-1. Python 3.8 or higher installed
-2. An OpenAI API key
-3. Basic knowledge of command line/terminal
+- Python 3.8 or higher installed
+- OpenAI API key
+- Basic command line knowledge
 
 ## Step-by-Step Setup
 
-### Step 1: Install Required Packages
-
-Open your terminal/command prompt and run:
-
+### Step 1: Install Python Dependencies
+Open your terminal/command prompt in the project folder and run:
 ```bash
-pip install crewai langchain-openai python-dotenv
+pip install -r requirements.txt
 ```
 
-### Step 2: Create Environment File
-
-1. In the same folder as `team.py`, create a file named `.env`
-2. Add your OpenAI API key:
-
-```
-OPENAI_API_KEY=your_api_key_here
-```
-
-Replace `your_api_key_here` with your actual OpenAI API key.
+### Step 2: Set Up Your OpenAI API Key
+1. Open the `.env` file in this folder
+2. Replace the existing API key with your own OpenAI API key:
+   ```
+   OPENAI_API_KEY="your-api-key-here"
+   ```
+3. Save the file
 
 ### Step 3: Run the Program
-
-In your terminal, navigate to the project folder and run:
-
+In your terminal, run:
 ```bash
-python team.py
+python team_openai.py
 ```
 
-## How to Use
-
-### Interactive Mode
-
-When you run the program, it starts in "Assignment Mode":
-
+### Step 4: Use the Interactive Mode
+Once the program starts, you'll see:
 ```
 Assignment Mode (type 'exit' to quit)
 
-Assignment: 
+Assignment:
 ```
 
-You can type any task or question, for example:
-- "Create a meeting agenda for tomorrow's standup"
+Now you can type any task or question, for example:
 - "Schedule a team meeting for next week"
-- "Summarize the key points from our last discussion"
+- "Create an agenda for a project kickoff"
+- "Summarize our last meeting notes"
+- "Plan a 30-minute standup meeting"
 
+### Step 5: Exit the Program
 Type `exit`, `quit`, or `q` to stop the program.
 
-## Understanding the Code
+## Features
+- **Meeting Coordinator**: Schedules meetings efficiently
+- **Agenda Planner**: Creates structured meeting agendas
+- **Note Taker**: Summarizes meetings and creates action items
+- **Assignment Handler**: Processes your task requests
 
-### Main Components
+## Configuration
+The agents are configured with:
+- Model: `gpt-5-nano-2025-08-07`
+- Max iterations: 2 (to control response length)
+- Verbose mode: Off (cleaner output)
 
-1. **LLM (Language Model)**: The AI brain that powers the agents
-   - Uses OpenAI's GPT model
-   - Temperature set to 0.1 for consistent responses
+## Troubleshooting
 
-2. **Agents**: Four specialized AI assistants
-   - **Coordinator**: Schedules meetings
-   - **Summarizer**: Takes notes and creates summaries
-   - **Planner**: Creates meeting agendas
-   - **Assistant**: Handles general task assignments
+### SSL Certificate Error
+If you see SSL/telemetry errors, the code already disables telemetry with:
+```python
+os.environ["OTEL_SDK_DISABLED"] = "true"
+```
 
-3. **Tasks**: Specific jobs given to agents
-   - Each task has a description and expected output
-   - Tasks are executed by assigned agents
+### API Key Issues
+- Make sure your OpenAI API key is valid
+- Check that you have credits in your OpenAI account
+- Verify the `.env` file is in the same folder as `team_openai.py`
 
-4. **Crew**: A team of agents working together
-   - Agents collaborate to complete tasks
-   - Tasks run sequentially (one after another)
-
-### Key Functions
-
-- `create_llm()`: Sets up the AI model
-- `create_agents()`: Creates the four AI assistants
-- `create_schedule_task()`: Makes a meeting scheduling task
-- `create_agenda_task()`: Makes an agenda creation task
-- `create_summary_task()`: Makes a note summarization task
-- `handle_user_assignment()`: Processes your input
-- `interactive_mode()`: Runs the chat interface
+### Model Not Found
+If the model is not available, change the model in `team_openai.py`:
+```python
+def create_llm():
+    return ChatOpenAI(model="gpt-4o-mini")  # or another available model
+```
 
 ## Example Usage
-
 ```
-Assignment: Schedule a team meeting for next Monday
+Assignment: Schedule a team meeting for tomorrow at 2 PM
 
-[AI will suggest meeting times, create an invite template, and provide a checklist]
-
-Assignment: Create an agenda for a 1-hour project review
-
-[AI will create a structured agenda with time allocations and topics]
+[AI will generate meeting details, invite template, and checklist]
 
 Assignment: exit
 ```
 
-## Troubleshooting
-
-**Problem**: "Module not found" error
-- **Solution**: Make sure you installed all packages (Step 1)
-
-**Problem**: "API key not found" error
-- **Solution**: Check your `.env` file has the correct API key
-
-**Problem**: Program runs but no response
-- **Solution**: Verify your OpenAI API key is valid and has credits
-
-## Customization
-
-### Change the AI Model
-
-In `create_llm()` function, modify:
-```python
-return ChatOpenAI(model="gpt-4", temperature=0.1)
-```
-
-### Add More Agents
-
-In `create_agents()` function, add a new agent:
-```python
-'new_agent': Agent(
-    role='Your Role',
-    goal='Your Goal',
-    backstory='Your Backstory',
-    verbose=True,
-    allow_delegation=False,
-    llm=llm
-)
-```
-
-## Project Structure
-
-```
-AI_Engineer_104/
-├── team.py          # Main program file
-├── .env             # API keys (create this)
-└── README.md        # This file
-```
-
-## Important Notes
-
-- Keep your `.env` file private (never share your API key)
-- Each API call costs money (check OpenAI pricing)
-- The program needs internet connection to work
-- Responses may take a few seconds to generate
-
-## Next Steps
-
-Once comfortable with the basics:
-1. Try modifying agent roles and goals
-2. Create custom tasks for specific needs
-3. Experiment with different meeting scenarios
-4. Add error handling for your use cases
-
-## Support
-
-If you encounter issues:
-1. Check that all packages are installed
-2. Verify your API key is correct
-3. Ensure you have internet connection
-4. Review error messages carefully
-
----
+## Need Help?
+- Check your Python version: `python --version`
+- Verify dependencies: `pip list`
+- Review error messages carefully - they usually indicate what's wrong
