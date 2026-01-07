@@ -1,46 +1,59 @@
 from crewai import Agent, Task, Crew, Process
-from langchain_openai import ChatOpenAI
+from langchain_ollama import ChatOllama
 from datetime import datetime
 from dotenv import load_dotenv
+import os
 
 load_dotenv()
 
+# Disable CrewAI telemetry
+os.environ["OTEL_SDK_DISABLED"] = "true"
+
 def create_llm():
-    return ChatOpenAI(model="gpt-5-nano-2025-08-07", temperature=0.1)
+    return ChatOllama(
+        model="ministral-3:3b",
+        base_url=os.getenv("OLLAMA_BASE_URL", "http://localhost:11434"),
+        temperature=0.1,
+        num_predict=2500
+    )
 
 def create_agents(llm):
     return {
         'coordinator': Agent(
             role='Meeting Coordinator',
             goal='Schedule meetings efficiently',
-            backstory='Executive assistant specializing in meeting coordination.',
-            verbose=True,
+            backstory='Executive assistant specializing in meeting coordination. Keep responses concise.',
+            verbose=False,
             allow_delegation=False,
-            llm=llm
+            llm=llm,
+            max_iter=2
         ),
         'summarizer': Agent(
             role='Meeting Note Taker',
             goal='Create meeting summaries and action items',
-            backstory='Skilled note-taker capturing key decisions and action items.',
-            verbose=True,
+            backstory='Skilled note-taker capturing key decisions and action items. Keep responses brief.',
+            verbose=False,
             allow_delegation=False,
-            llm=llm
+            llm=llm,
+            max_iter=2
         ),
         'planner': Agent(
             role='Agenda Planner',
             goal='Create structured meeting agendas',
-            backstory='Expert at creating productive meeting agendas.',
-            verbose=True,
+            backstory='Expert at creating productive meeting agendas. Keep responses concise.',
+            verbose=False,
             allow_delegation=False,
-            llm=llm
+            llm=llm,
+            max_iter=2
         ),
         'assistant': Agent(
             role='Assignment Handler',
             goal='Process user assignments',
-            backstory='Assistant handling user task assignments.',
-            verbose=True,
+            backstory='Assistant handling user task assignments. Keep responses brief and to the point.',
+            verbose=False,
             allow_delegation=False,
-            llm=llm
+            llm=llm,
+            max_iter=2
         )
     }
 
